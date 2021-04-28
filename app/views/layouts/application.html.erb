@@ -45,10 +45,21 @@
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <%= user_signed_in? ? current_user.email : 'Visitor' %>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <% if user_signed_in? %>
+                  <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
+                <% else %>
+                  <%= link_to 'Sign In', new_user_session_path, class: 'dropdown-item' %>
+                  <%= link_to 'Sign Up', new_user_registration_path, class: 'dropdown-item' %>
+                <% end %>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
