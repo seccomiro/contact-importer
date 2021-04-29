@@ -1,14 +1,16 @@
 require:
   - rubocop-rails
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.7
-  DisabledByDefault: true
   NewCops: enable
 
 Security:
   Enabled: true
 
+Style/NumericLiterals:
+  Enabled: false
 Style/StringLiterals:
   Enabled: true
 Style/Documentation:

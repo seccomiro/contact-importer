@@ -36,3 +36,7 @@ yarn-debug.log*
 .yarn-integrity
 
 .env
+
+app/assets/stylesheets/scaffolds.scss
+
+public/uploads/

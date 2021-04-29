@@ -1,3 +1,11 @@
 Rails.application.routes.draw do
-  # root to: "home#index"
+  resources :contacts, only: [:index]
+  resources :imports, only: [:index, :show, :new, :create] do
+    member do
+      post :assign
+      get :execute
+    end
+  end
+  devise_for :users
+  root to: 'home#index'
 end
