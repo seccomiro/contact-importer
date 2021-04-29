@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :contact do
-    name { 'MyString' }
-    email { 'MyString' }
+    name { Faker::Name.name }
+    email { Faker::Internet.email }
     birthdate { DateTime.now }
-    phone { 'MyString' }
-    address { 'MyString' }
+    phone { '(+57) 320-432-05-09' }
+    address { Faker::Address.full_address }
     user
   end
 end

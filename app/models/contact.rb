@@ -1,8 +1,8 @@
 class Contact < ApplicationRecord
   belongs_to :user
-  belongs_to :credit_card, dependent: :destroy
+  belongs_to :credit_card, optional: true, dependent: :destroy
 
-  validates :name, presence: true, format: { with: /[-\w]/i }
+  validates :name, presence: true, format: { with: /[-\w\s]/i }
   validates :email, presence: true
   validates :birthdate, presence: true
   validates :phone, presence: true, format: {

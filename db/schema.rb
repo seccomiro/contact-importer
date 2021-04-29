@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_170603) do
     t.string "phone"
     t.string "address"
     t.bigint "user_id", null: false
-    t.bigint "credit_card_id", null: false
+    t.bigint "credit_card_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["credit_card_id"], name: "index_contacts_on_credit_card_id"
