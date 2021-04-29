@@ -1,13 +1,15 @@
 require 'csv'
+require 'down'
 
 class CsvImporter
   def initialize(import)
     @import = import
-    @url = "#{ENV['ROOT_URL']}/#{@import.file.url}"
+    @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
+    @tempfile = Down.download(@url).path
   end
 
   def fetch_headers
-    CSV.open(@url, &:readline).first.split(';')
+    CSV.open(@tempfile, &:readline).first.split(';')
        .map { |h| { h => '' } }
        .reduce({}) { |acc, h| acc.merge(h) }
   end
@@ -19,7 +21,7 @@ class CsvImporter
   private
 
   def import
-    CSV.foreach(@url, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
+    CSV.foreach(@tempfile, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
       import_contact = @import.import_contacts.build
       @import.headers.each do |header, db_column|
         import_contact[db_column.to_sym] = line[header]
