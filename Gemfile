@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.3'
 
 gem 'devise'
-gem 'jbuilder', '~> 2.7'
+gem 'font-awesome-sass', '~> 5.15.1'
 gem 'pg', '~> 1.1'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.3', '>= 6.1.3.1'
@@ -20,7 +20,9 @@ group :development, :test do
   gem 'database_cleaner-active_record'
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'rspec-rails', '~> 5.0.0'
+  gem 'solargraph'
 end
 
 group :development do
