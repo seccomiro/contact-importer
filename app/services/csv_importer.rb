@@ -26,7 +26,7 @@ class CsvImporter
       import_contact.save
       generate_contact(import_contact)
     end
-    @import.status = :finished
+    @import.status = @import.import_contacts.without_error.any? ? :finished : :failed
     @import.save
   end
 
