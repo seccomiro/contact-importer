@@ -5,7 +5,7 @@ class CreateImportContacts < ActiveRecord::Migration[6.1]
       t.string :error_message
       t.string :name
       t.string :email
-      t.date :birthdate
+      t.string :birthdate
       t.string :phone
       t.string :address
       t.string :credit_card_number

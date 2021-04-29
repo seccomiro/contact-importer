@@ -1,5 +1,5 @@
 class ImportsController < ApplicationController
-  before_action :set_import, only: [:show, :assign]
+  before_action :set_import, only: [:show, :assign, :execute]
   before_action :authenticate_user!
 
   def index
@@ -32,6 +32,15 @@ class ImportsController < ApplicationController
   def assign
     @import.headers = header_params
     @import.save
+    redirect_to @import
+  end
+
+  def execute
+    @import.status = :processing
+    @import.save
+
+    CsvProcessWorker.perform_async(@import.id)
+
     redirect_to @import
   end
 

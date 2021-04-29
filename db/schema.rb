@@ -22,18 +22,18 @@ ActiveRecord::Schema.define(version: 2021_04_29_135635) do
     t.string "phone"
     t.string "address"
     t.bigint "user_id", null: false
+    t.bigint "credit_card_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["credit_card_id"], name: "index_contacts_on_credit_card_id"
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
   create_table "credit_cards", force: :cascade do |t|
     t.string "number"
     t.string "franchise"
-    t.bigint "contact_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["contact_id"], name: "index_credit_cards_on_contact_id"
   end
 
   create_table "import_contacts", force: :cascade do |t|
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_135635) do
     t.string "error_message"
     t.string "name"
     t.string "email"
-    t.date "birthdate"
+    t.string "birthdate"
     t.string "phone"
     t.string "address"
     t.string "credit_card_number"
@@ -72,8 +72,8 @@ ActiveRecord::Schema.define(version: 2021_04_29_135635) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "contacts", "credit_cards"
   add_foreign_key "contacts", "users"
-  add_foreign_key "credit_cards", "contacts"
   add_foreign_key "import_contacts", "imports"
   add_foreign_key "imports", "users"
 end
