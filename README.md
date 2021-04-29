@@ -18,6 +18,7 @@ Don't forget to configure your database connection at `.env`.
 Run the application:
 
 ```bash
+bin/webpack-dev-server
 bundle exec sidekiq
 rails s
 ```
