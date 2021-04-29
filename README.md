@@ -1,24 +1,47 @@
-# README
+# Contact Importer
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project allows you to import your contact list from a CSV file that contains dynamic header names.
 
-Things you may want to cover:
+## How to run locally
 
-* Ruby version
+Prepare your local environment:
 
-* System dependencies
+```bash
+git clone https://github.com/seccomiro/contacts-deploy.git
+cd contacts-deploy
+cp .env.example .env
+rails db:create db:migrate db:seed
+```
 
-* Configuration
+Don't forget to configure your database connection at `.env`.
 
-* Database creation
+Run the application:
 
-* Database initialization
+```bash
+bundle exec sidekiq
+rails s
+```
 
-* How to run the test suite
+⚠️ Warning:
 
-* Services (job queues, cache servers, search engines, etc.)
+> You'll need PostgreSQL and Redis already installed.
 
-* Deployment instructions
+Access the application:
 
-* ...
+Open http://localhost:3000 in your browser.
+
+## Default User
+
+- Email: user@user.com
+
+- Password: 321321321
+
+## Running Application
+
+This application is deployed to: https://csv-contact-importer.herokuapp.com.
+
+## To Do
+
+- Add more tests. Because of lack time to finish this feature, it was possible to tackle only the core credit card validation logic.
+- Upload files to AWS S3 instead of temp files.
+- Improve some validations
