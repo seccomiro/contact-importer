@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :credit_card do
-    number { "MyString" }
-    franchise { "MyString" }
-    contact { nil }
+    number { Faker::Finance.credit_card(:visa) }
+    contact
   end
 end
