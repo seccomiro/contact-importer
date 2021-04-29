@@ -1,5 +1,5 @@
 class ImportsController < ApplicationController
-  before_action :set_import, only: [:show]
+  before_action :set_import, only: [:show, :assign]
   before_action :authenticate_user!
 
   def index
@@ -7,6 +7,7 @@ class ImportsController < ApplicationController
   end
 
   def show
+    @importable_attributes = ImportContact.importable_attributes
   end
 
   def new
@@ -18,6 +19,10 @@ class ImportsController < ApplicationController
     @import.user = current_user
 
     if @import.save
+      importer = CsvImporter.new(@import)
+      @import.headers = importer.fetch_headers
+      @import.save
+
       redirect_to @import, notice: 'Import was successfully created.'
     else
       render :new
@@ -25,9 +30,9 @@ class ImportsController < ApplicationController
   end
 
   def assign
-  end
-
-  def process
+    @import.headers = header_params
+    @import.save
+    redirect_to @import
   end
 
   private
@@ -38,5 +43,9 @@ class ImportsController < ApplicationController
 
   def import_params
     params.require(:import).permit(:file)
+  end
+
+  def header_params
+    params.require(:file_header).permit!.to_hash
   end
 end

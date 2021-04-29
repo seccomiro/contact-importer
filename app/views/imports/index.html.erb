@@ -15,6 +15,7 @@
     <thead>
       <tr>
         <th>File</th>
+        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -23,15 +24,10 @@
       <% @imports.each do |import| %>
         <tr>
           <td><%= import.file %></td>
+          <td><%= import.status.to_s.humanize %></td>
           <td>
             <%= link_to import, class: 'btn btn-info btn-sm' do %>
               <%= icon 'fas', 'eye', class: 'fa-fw' %>
-            <% end %>
-            <%= link_to edit_import_path(import), class: 'btn btn-success btn-sm' do %>
-              <%= icon 'fas', 'edit', class: 'fa-fw' %>
-            <% end %>
-            <%= link_to import, method: :delete, data: { confirm: 'Você tem certeza?' }, class: 'btn btn-danger btn-sm' do %>
-              <%= icon 'fas', 'times', class: 'fa-fw' %>
             <% end %>
           </td>
         </tr>
