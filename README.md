@@ -7,7 +7,7 @@ This project allows you to import your contact list from a CSV file that contain
 Prepare your local environment:
 
 ```bash
-git clone https://github.com/seccomiro/contacts-deploy.git
+git clone https://github.com/seccomiro/contact-importer.git
 cd contacts-deploy
 cp .env.example .env
 rails db:create db:migrate db:seed
