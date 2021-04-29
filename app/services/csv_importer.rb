@@ -6,7 +6,7 @@ class CsvImporter
   end
 
   def fetch_headers
-    CSV.open(@import.file.path, &:readline).first.split(';')
+    CSV.open(@import.file.url, &:readline).first.split(';')
        .map { |h| { h => '' } }
        .reduce({}) { |acc, h| acc.merge(h) }
   end
@@ -18,7 +18,7 @@ class CsvImporter
   private
 
   def import
-    CSV.foreach(@import.file.path, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
+    CSV.foreach(@import.file.url, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
       import_contact = @import.import_contacts.build
       @import.headers.each do |header, db_column|
         import_contact[db_column.to_sym] = line[header]
