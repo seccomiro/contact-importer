@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_235635) do
+ActiveRecord::Schema.define(version: 2021_04_29_170603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,18 +22,44 @@ ActiveRecord::Schema.define(version: 2021_04_28_235635) do
     t.string "phone"
     t.string "address"
     t.bigint "user_id", null: false
+    t.bigint "credit_card_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["credit_card_id"], name: "index_contacts_on_credit_card_id"
+    t.index ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
   create_table "credit_cards", force: :cascade do |t|
     t.string "number"
     t.string "franchise"
-    t.bigint "contact_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["contact_id"], name: "index_credit_cards_on_contact_id"
+    t.string "token"
+  end
+
+  create_table "import_contacts", force: :cascade do |t|
+    t.bigint "import_id", null: false
+    t.string "error_message"
+    t.string "name"
+    t.string "email"
+    t.string "birthdate"
+    t.string "phone"
+    t.string "address"
+    t.string "credit_card_number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["import_id"], name: "index_import_contacts_on_import_id"
+  end
+
+  create_table "imports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "file"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "headers"
+    t.index ["user_id"], name: "index_imports_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -48,6 +74,8 @@ ActiveRecord::Schema.define(version: 2021_04_28_235635) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "contacts", "credit_cards"
   add_foreign_key "contacts", "users"
-  add_foreign_key "credit_cards", "contacts"
+  add_foreign_key "import_contacts", "imports"
+  add_foreign_key "imports", "users"
 end

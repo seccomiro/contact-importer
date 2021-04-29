@@ -10,8 +10,8 @@ user = User.create(email: 'user@user.com', password: '321321321', password_confi
   )
   contact.create_credit_card(
     # TODO: Refactor to fit validations
-    number: Faker::Finance.credit_card,
+    number: Faker::Finance.credit_card(:visa),
     # TODO: Refactor to fit validations
-    franchise: ['Visa', 'American Express', 'MasterCard'].sample
+    # franchise: ['Visa', 'American Express', 'MasterCard'].sample
   )
 end
