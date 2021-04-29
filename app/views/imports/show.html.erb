@@ -1,0 +1,19 @@
+<% content_for :title do %>
+  Details of Import
+<% end %>
+
+<div class="page-header">
+  <h1>Details of Import</h1>
+  <div>
+    <%= link_to imports_path, class: 'btn btn-outline-secondary' do %>
+      <%= icon 'fas', 'bars' %>
+      Back
+    <% end %>
+  </div>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>File:</dt>
+  <dd><%= @import.file %></dd>
+
+</dl>

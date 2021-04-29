@@ -38,3 +38,5 @@ yarn-debug.log*
 .env
 
 app/assets/stylesheets/scaffolds.scss
+
+public/uploads/
