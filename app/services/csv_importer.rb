@@ -31,7 +31,7 @@ class CsvImporter
   end
 
   def generate_contact(import_contact)
-    @import.user.contacts.create(
+    contact = @import.user.contacts.create(
       name: import_contact.name,
       email: import_contact.email,
       birthdate: Date.parse(import_contact.birthdate),
@@ -41,5 +41,7 @@ class CsvImporter
         number: import_contact.credit_card_number
       }
     )
+    import_contact.error_message = contact.errors.full_messages.to_json unless contact.valid?
+    import_contact.save
   end
 end

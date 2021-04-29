@@ -8,6 +8,7 @@ class Contact < ApplicationRecord
   validates :phone, presence: true
   validates :address, presence: true
   validates :user, presence: true
+  validates :email, uniqueness: { scope: :user_id }
 
   accepts_nested_attributes_for :credit_card
 end

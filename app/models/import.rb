@@ -4,6 +4,8 @@ class Import < ApplicationRecord
   enum status: [:on_hold, :processing, :failed, :finished]
   mount_uploader :file, CsvUploader
 
+  default_scope -> { order(:created_at) }
+
   before_validation :ensure_status
 
   def ensure_status
