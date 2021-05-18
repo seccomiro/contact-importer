@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-feature 'User signs in' do
+describe 'User signs in' do
   let(:user) { create(:user) }
   let(:nonexisting_user) { build(:user, email: 'invalid@user.com') }
 
-  scenario 'with valid credentials' do
+  it 'with valid credentials' do
     visit new_user_session_path
 
     fill_in 'Email', with: user.email
@@ -16,7 +16,7 @@ feature 'User signs in' do
     expect(page).to have_current_path root_path
   end
 
-  scenario 'with invalid credentials' do
+  it 'with invalid credentials' do
     visit new_user_session_path
 
     fill_in 'Email', with: nonexisting_user.email

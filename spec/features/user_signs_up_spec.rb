@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'User signs up' do
+describe 'User signs up' do
   let(:user) { build(:user) }
 
-  scenario 'with valid data' do
+  it 'with valid data' do
     visit new_user_registration_path
 
     fill_in 'Email', with: user.email
@@ -16,7 +16,7 @@ feature 'User signs up' do
     expect(page).to have_current_path root_path
   end
 
-  scenario 'with invalid data' do
+  it 'with invalid data' do
     visit new_user_registration_path
 
     click_button 'Sign up'

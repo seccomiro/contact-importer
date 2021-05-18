@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'User signs out' do
+describe 'User signs out' do
   let(:user) { create(:user) }
 
-  scenario 'user signed in' do
+  it 'user signed in' do
     sign_in user
 
     visit root_path
