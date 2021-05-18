@@ -1,41 +1,11 @@
 require 'rails_helper'
 
 describe CreditCardValidation do
-  let(:valid_credit_cards) do
-    [
-      { issuer: 'American Express', number: '341111111111111' },
-      { issuer: 'Bankcard', number: '5602221111111111' },
-      { issuer: 'UkrCard', number: '6042009911111111' },
-      { issuer: 'UkrCard', number: '6042009911111111222' },
-      { issuer: 'MIR', number: '2200111111111111' },
-      { issuer: 'Switch', number: '5641821111111111' },
-      { issuer: 'Switch', number: '564182111111111122' },
-      { issuer: 'Switch', number: '5641821111111111223' }
-    ]
-  end
-  let(:formatted_credit_cards) do
-    [
-      { issuer: 'Bankcard', number: '5602 2211 1111 1111' },
-      { issuer: 'Bankcard', number: '5602-2211-1111-1111' },
-      { issuer: 'Bankcard', number: '5602.2211.1111.1111' }
-    ]
-  end
-  let(:nonexisting_issuer) { '0000000000000000' }
-  let(:invalid_length_cards) do
-    [
-      { issuer: 'Switch', number: '564182111111111' },
-      { issuer: 'Discover Card', number: '644111111111111' }
-    ]
-  end
-  let(:invalid_min_max_length_cards) do
-    [
-      { issuer: 'UkrCard', number: '60400100' },
-      { issuer: 'UkrCard', number: '4' },
-      { issuer: 'UkrCard', number: '' },
-      { issuer: 'Discover Card', number: '64411111111111111111' },
-      { issuer: 'Diners Club United States & Canada', number: '54111111111111111111' }
-    ]
-  end
+  let(:valid_credit_cards) { build(:credit_card_data, :valid).credit_cards }
+  let(:formatted_credit_cards) { build(:credit_card_data, :formatted).credit_cards }
+  let(:nonexisting_issuer) { build(:credit_card_data, :nonexisting_issuer).credit_cards }
+  let(:invalid_length_cards) { build(:credit_card_data, :invalid_length_cards).credit_cards }
+  let(:invalid_min_max_length_cards) { build(:credit_card_data, :invalid_min_max_length_cards).credit_cards }
 
   describe '#fetch_issuer_name' do
     context 'with existing issuer' do
@@ -88,10 +58,14 @@ describe CreditCardValidation do
   end
 
   describe '#last_digits' do
-    it 'returns the last 4 digits of the card number' do
-      last_digits = described_class.new(valid_credit_cards.first[:number]).last_digits
-      expect(last_digits).to eq(last_digits.last(4))
+    let(:last_digits) { described_class.new(valid_credit_cards.first[:number]).last_digits }
+
+    it 'returns 4 digits' do
       expect(last_digits.size).to eq(4)
+    end
+
+    it 'returns the last 4 digits of the card number' do
+      expect(last_digits).to eq(last_digits.last(4))
     end
   end
 end
