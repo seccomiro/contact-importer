@@ -8,7 +8,7 @@ Prepare your local environment:
 
 ```bash
 git clone https://github.com/seccomiro/contact-importer.git
-cd contacts-deploy
+cd contacts-importer
 cp .env.example .env
 rails db:create db:migrate db:seed
 ```
