@@ -10,6 +10,10 @@ class ImportContact < ApplicationRecord
 
   def valid_birthdate?
     valid_formats = ['%F', '%Y%m%d']
-    valid_formats.any? { |f| DateTime.strptime(birthdate, f) rescue false }
+    valid_formats.any? do |f|
+      DateTime.strptime(birthdate, f)
+    rescue StandardError
+      false
+    end
   end
 end
