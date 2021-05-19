@@ -5,7 +5,7 @@ RSpec.describe Import, type: :model do
     it { is_expected.to have_attribute(:file) }
     it { is_expected.to have_attribute(:status) }
     it { is_expected.to have_attribute(:headers) }
-    it { is_expected.to define_enum_for(:status).with({ on_hold: 0, processing: 1, failed: 2, finished: 3 }) }
+    it { is_expected.to define_enum_for(:status).with_values({ on_hold: 0, processing: 1, failed: 2, finished: 3 }) }
   end
 
   describe 'columns' do
