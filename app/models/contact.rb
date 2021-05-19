@@ -11,17 +11,6 @@ class Contact < ApplicationRecord
   validates :address, presence: true
   validates :user, presence: true
   validates :email, uniqueness: { scope: :user_id }
-  # validate :birthdates
 
   accepts_nested_attributes_for :credit_card
-
-  # private
-
-  # TODO: Validation logic should be moved to ImportContact
-  # def birthdates
-  #   valid_formats = ['%F', '%Y%m%d']
-  #   return if valid_formats.any? { |f| DateTime.strptime(birthdate, f) rescue false }
-
-  #   errors.add(:birthdate, 'is at an invalid format')
-  # end
 end
