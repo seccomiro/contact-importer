@@ -40,14 +40,14 @@ describe CsvImporter do
     end
 
     context 'with a file with 4 contacts with errors' do
-      let(:csv_importer) { described_class.new(import, file_fixture('4error.csv')) }
+      let(:csv_importer) { described_class.new(import, file_fixture('5error.csv')) }
 
       before do
         csv_importer.execute
       end
 
-      it 'creates 4 import contacts' do
-        expect(import.import_contacts.count).to eq(4)
+      it 'creates 5 import contacts' do
+        expect(import.import_contacts.count).to eq(5)
       end
 
       it 'does not create any contacts' do
