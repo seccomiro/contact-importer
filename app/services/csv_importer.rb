@@ -18,7 +18,7 @@ class CsvImporter
        .reduce({}) { |acc, h| acc.merge(h) }
   end
 
-  def import
+  def execute
     CSV.foreach(@tempfile, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
       import_contact = @import.import_contacts.build
       @import.headers.each do |header, db_column|

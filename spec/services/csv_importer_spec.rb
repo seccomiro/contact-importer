@@ -16,14 +16,14 @@ describe CsvImporter do
     end
   end
 
-  describe '#import' do
+  describe '#execute' do
     let(:import) { create(:import) }
 
     context 'with a file with 3 correct contacts' do
       let(:csv_importer) { described_class.new(import, file_fixture('3correct.csv')) }
 
       before do
-        csv_importer.import
+        csv_importer.execute
       end
 
       it 'creates 3 import contacts' do
@@ -43,7 +43,7 @@ describe CsvImporter do
       let(:csv_importer) { described_class.new(import, file_fixture('4error.csv')) }
 
       before do
-        csv_importer.import
+        csv_importer.execute
       end
 
       it 'creates 4 import contacts' do
@@ -59,7 +59,7 @@ describe CsvImporter do
       let(:csv_importer) { described_class.new(import, file_fixture('1correct-3error.csv')) }
 
       before do
-        csv_importer.import
+        csv_importer.execute
       end
 
       it 'creates 4 import contacts' do
