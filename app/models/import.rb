@@ -8,6 +8,8 @@ class Import < ApplicationRecord
 
   before_validation :ensure_status
 
+  private
+
   def ensure_status
     self.status = :on_hold unless status
   end
