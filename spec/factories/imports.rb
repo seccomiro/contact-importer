@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :import do
-    user { nil }
-    file { 'MyString' }
-    status { 1 }
+    user
+    file { 'contacts.csv' }
   end
 end
