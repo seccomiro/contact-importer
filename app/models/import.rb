@@ -10,6 +10,10 @@ class Import < ApplicationRecord
 
   before_validation :ensure_status
 
+  def headers_filled?
+    headers&.all? { |_, v| v.present? } || false
+  end
+
   private
 
   def ensure_status

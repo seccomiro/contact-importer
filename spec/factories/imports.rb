@@ -12,5 +12,18 @@ FactoryBot.define do
         'credit_card' => 'credit_card_number'
       }
     end
+
+    trait :empty_headers do
+      headers do
+        {
+          'name' => '',
+          'email' => '',
+          'birthdate' => '',
+          'phone' => '',
+          'address' => '',
+          'credit_card' => ''
+        }
+      end
+    end
   end
 end

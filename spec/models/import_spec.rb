@@ -24,7 +24,7 @@ RSpec.describe Import, type: :model do
     it { is_expected.to have_many(:import_contacts).dependent(:destroy) }
   end
 
-  describe 'vaidations' do
+  describe 'validations' do
     it { is_expected.to validate_presence_of(:file) }
   end
 
@@ -53,6 +53,45 @@ RSpec.describe Import, type: :model do
         import = build(:import, status: status)
         import.valid?
         expect(import.status).to eq(status)
+      end
+    end
+  end
+
+  describe '#headers_filled?' do
+    let(:import) { create(:import, headers: nil) }
+
+    context 'with nil headers' do
+      it 'returns false' do
+        expect(import.headers_filled?).to be(false)
+      end
+    end
+
+    context 'with headers loaded but not filled yet' do
+      it 'returns false' do
+        import.headers = CsvImporter.new(import).fetch_headers
+
+        expect(import.headers_filled?).to be(false)
+      end
+    end
+
+    context 'with headers filled' do
+      it 'returns true' do
+        import.headers = CsvImporter.new(import).fetch_headers
+        import.headers.each do |k, _|
+          import.headers[k] = k
+        end
+
+        expect(import.headers_filled?).to be(true)
+      end
+    end
+
+    context 'with all headers filled, except one' do
+      it 'returns false' do
+        import.headers = CsvImporter.new(import).fetch_headers
+        import.headers.each { |k, _| import.headers[k] = k }
+        import.headers['name'] = ''
+
+        expect(import.headers_filled?).to be(false)
       end
     end
   end
