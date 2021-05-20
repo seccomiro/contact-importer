@@ -40,6 +40,19 @@ RSpec.feature 'Contact visualization', type: :feature do
         expect(page).to have_selector('.current', text: '2')
       end
     end
+
+    context 'with a different user also with contacts' do
+      let(:another_user) { create(:user) }
+
+      before do
+        create(:contact, user: another_user, credit_card: build(:credit_card))
+        visit contacts_path
+      end
+
+      scenario 'User only sees its own contacts' do
+        expect(page).to have_css('.contacts tbody tr', count: 3)
+      end
+    end
   end
 
   context 'with a guest' do
