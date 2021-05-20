@@ -24,6 +24,10 @@ RSpec.describe Import, type: :model do
     it { is_expected.to have_many(:import_contacts).dependent(:destroy) }
   end
 
+  describe 'vaidations' do
+    it { is_expected.to validate_presence_of(:file) }
+  end
+
   describe 'before_validation' do
     let(:import) { build(:import) }
 

@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :import do
     user
+    file { File.open(Rails.root.join('spec/fixtures/files/3correct.csv')) }
     headers do
       {
         'name' => 'name',
