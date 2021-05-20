@@ -4,12 +4,11 @@ require 'down'
 class CsvImporter
   def initialize(import, path = nil)
     @import = import
-    if path
-      @tempfile = path
-    else
-      @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
-      @tempfile = Down.download(@url).path
-    end
+    @tempfile = import.file.path
+
+    # TODO: This is needed in order to simulate public files in production.
+    # @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
+    # @tempfile = Down.download(@url).path
   end
 
   def fetch_headers

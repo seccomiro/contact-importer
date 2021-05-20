@@ -3,8 +3,9 @@ require 'rails_helper'
 describe CsvImporter do
   describe '#fetch_headers' do
     it 'returns a Hash with the headers of the CSV' do
-      import = create(:import)
-      csv_importer = described_class.new(import, file_fixture('3correct.csv'))
+      import = create(:import, file: File.open(file_fixture('3correct.csv')))
+      csv_importer = described_class.new(import)
+
       expect(csv_importer.fetch_headers).to match(
         'name' => '',
         'email' => '',
@@ -17,10 +18,10 @@ describe CsvImporter do
   end
 
   describe '#execute' do
-    let(:import) { create(:import) }
-
     context 'with a file with 3 correct contacts' do
-      let(:csv_importer) { described_class.new(import, file_fixture('3correct.csv')) }
+      let(:file) { file_fixture('3correct.csv') }
+      let(:import) { create(:import, file: File.open(file)) }
+      let(:csv_importer) { described_class.new(import) }
 
       before do
         csv_importer.execute
@@ -39,8 +40,10 @@ describe CsvImporter do
       end
     end
 
-    context 'with a file with 4 contacts with errors' do
-      let(:csv_importer) { described_class.new(import, file_fixture('5error.csv')) }
+    context 'with a file with 5 contacts with errors' do
+      let(:file) { file_fixture('5error.csv') }
+      let(:import) { create(:import, file: File.open(file)) }
+      let(:csv_importer) { described_class.new(import) }
 
       before do
         csv_importer.execute
@@ -56,7 +59,9 @@ describe CsvImporter do
     end
 
     context 'with a file with 1 correct contact and 3 contacts with errors' do
-      let(:csv_importer) { described_class.new(import, file_fixture('1correct-3error.csv')) }
+      let(:file) { file_fixture('1correct-3error.csv') }
+      let(:import) { create(:import, file: File.open(file)) }
+      let(:csv_importer) { described_class.new(import) }
 
       before do
         csv_importer.execute
@@ -77,8 +82,10 @@ describe CsvImporter do
   end
 
   describe '#generate_contact' do
-    let(:import_contact) { create(:import_contact) }
-    let(:csv_importer) { described_class.new(import_contact.import, 'file.csv') }
+    let(:file) { file_fixture('3correct.csv') }
+    let(:import) { create(:import, file: File.open(file)) }
+    let(:import_contact) { create(:import_contact, import: import) }
+    let(:csv_importer) { described_class.new(import) }
     let(:contact) { csv_importer.generate_contact(import_contact) }
 
     context 'with a valid import contact' do
