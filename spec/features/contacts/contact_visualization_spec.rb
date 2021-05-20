@@ -34,7 +34,7 @@ RSpec.feature 'Contact visualization', type: :feature do
         expect(page).to have_selector('.next_page')
         expect(page).to have_link('2', href: contacts_path(params: { page: 2, per_page: 2 }))
 
-        click_link(2)
+        click_link('2')
 
         expect(page).to have_link('1', href: contacts_path(params: { page: 1, per_page: 2 }))
         expect(page).to have_selector('.current', text: '2')
