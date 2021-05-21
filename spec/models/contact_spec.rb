@@ -97,4 +97,40 @@ RSpec.describe Contact, type: :model do
       end
     end
   end
+
+  describe '#email_check' do
+    let(:contact) { create(:contact, email: 'contact@email.com') }
+    let(:contact_with_same_email) { create(:contact, email: 'contact@email.com') }
+    let(:contact_with_different_email) { create(:contact, email: 'another@email.com') }
+
+    context 'with a email check created from a contact email' do
+      it 'returns an instance of EmailCheck with the same email' do
+        create(:email_check, email: contact.email)
+
+        expect(contact.email_check.email).to eq(contact.email)
+      end
+    end
+
+    context 'with a email check created from another contact email' do
+      it 'returns an instance of EmailCheck with the same email' do
+        create(:email_check, email: contact_with_same_email.email)
+
+        expect(contact.email_check.email).to eq(contact.email)
+      end
+    end
+
+    context 'with no email check created from the contact email yet' do
+      it 'returns nil' do
+        expect(contact.email_check).to be_nil
+      end
+    end
+
+    context 'with only a email check created from the email of a contact with different email' do
+      it 'returns nil' do
+        create(:email_check, email: contact_with_different_email.email)
+
+        expect(contact.email_check).to be_nil
+      end
+    end
+  end
 end

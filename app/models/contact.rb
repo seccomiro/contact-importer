@@ -13,4 +13,8 @@ class Contact < ApplicationRecord
   validates :email, uniqueness: { scope: :user_id }
 
   accepts_nested_attributes_for :credit_card
+
+  def email_check
+    EmailCheck.find_by(email: email)
+  end
 end

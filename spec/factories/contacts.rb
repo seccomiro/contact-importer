@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :contact do
-    sequence(:name) { |n| "Contact Name #{(n + 65).chr}" }
+    sequence(:name) { |n| "Contact Name #{(65 + n % 26).chr}" }
     sequence(:email) { |n| "contact#{n}@contact.com" }
     birthdate { DateTime.now }
     phone { '(+57) 320-432-05-09' }

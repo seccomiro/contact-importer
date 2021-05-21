@@ -34,7 +34,7 @@ RSpec.describe EmailCheck, type: :model do
 
     context 'executes methods correctly' do
       let(:contact) { create(:contact, email: 'contact@email.com') }
-      let(:email_check) { create(:email_check, email: 'contact@email.com') }
+      let(:email_check) { create(:email_check, email: contact.email) }
 
       describe '#contacts' do
         let(:contact_with_same_email) { create(:contact, email: 'contact@email.com') }
