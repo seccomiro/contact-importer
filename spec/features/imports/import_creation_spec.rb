@@ -71,7 +71,6 @@ RSpec.feature 'Import creation', type: :feature do
 
       expect(page).to have_link('Process File')
 
-      require 'sidekiq/testing'
       Sidekiq::Testing.inline! do
         click_on 'Process File'
 
