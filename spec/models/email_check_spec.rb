@@ -7,7 +7,7 @@ RSpec.describe EmailCheck, type: :model do
     expect(build(:email_check)).to be_valid
   end
 
-  context 'attributes' do
+  describe 'attributes' do
     it {
       expect(subject).to define_enum_for(:status)
         .with_values({
@@ -17,9 +17,13 @@ RSpec.describe EmailCheck, type: :model do
     }
   end
 
-  context 'validations' do
+  describe 'validations' do
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:status) }
+  end
+
+  describe 'indexes' do
+    it { is_expected.to have_db_index([:email]).unique(true) }
   end
 
   describe 'public instance methods' do
