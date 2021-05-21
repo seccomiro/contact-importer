@@ -3,9 +3,11 @@ class EmailCheck < ApplicationRecord
   validates :status, presence: true
 
   enum status: {
-    on_hold: 0, checking: 1, good: 2, bad: 3,
-    catch_all: 4, unknown: 5, spamtrap: 6, abuse: 7, do_not_mail: 8
+    checking: 0, good: 1, bad: 2,
+    catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7
   }
+
+  before_validation :ensure_status
 
   def contacts
     Contact.where(email: email)
@@ -21,7 +23,6 @@ class EmailCheck < ApplicationRecord
 
   def status_map
     {
-      'on_hold' => :on_hold,
       'checking' => :checking,
       'valid' => :good,
       'invalid' => :bad,
@@ -31,5 +32,9 @@ class EmailCheck < ApplicationRecord
       'abuse' => :abuse,
       'do_not_mail' => :do_not_mail
     }
+  end
+
+  def ensure_status
+    self.status = :checking unless status
   end
 end

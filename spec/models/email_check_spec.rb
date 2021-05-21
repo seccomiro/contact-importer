@@ -11,8 +11,8 @@ RSpec.describe EmailCheck, type: :model do
     it {
       expect(subject).to define_enum_for(:status)
         .with_values({
-                       on_hold: 0, checking: 1, good: 2, bad: 3,
-                       catch_all: 4, unknown: 5, spamtrap: 6, abuse: 7, do_not_mail: 8
+                       checking: 0, good: 1, bad: 2,
+                       catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7
                      })
     }
   end
@@ -68,7 +68,6 @@ RSpec.describe EmailCheck, type: :model do
         end
 
         context 'with valid transient statuses as input' do
-          it_behaves_like 'registers valid status for valid input', 'on_hold', :on_hold
           it_behaves_like 'registers valid status for valid input', 'checking', :checking
         end
 
@@ -77,6 +76,38 @@ RSpec.describe EmailCheck, type: :model do
             expect { email_check.register_status('unrecognized') }.to raise_error('Invalid status')
           end
         end
+      end
+    end
+  end
+
+  describe 'before_validation' do
+    let(:email_check) { build(:email_check) }
+
+    context 'without a previous status defined' do
+      it 'defines the status as checking' do
+        email_check = build(:email_check)
+        email_check.valid?
+
+        expect(email_check).to be_checking
+      end
+    end
+
+    context 'with checking as the previous status' do
+      it 'keeps checking as the status' do
+        email_check = build(:email_check, status: :checking)
+        email_check.valid?
+
+        expect(email_check).to be_checking
+      end
+    end
+
+    context 'with any valid previous status except checking' do
+      it 'keeps the current status' do
+        status = (described_class.statuses.keys.map(&:to_sym) - [:checking]).sample.to_s
+        email_check = build(:email_check, status: status)
+        email_check.valid?
+
+        expect(email_check.status).to eq(status)
       end
     end
   end
