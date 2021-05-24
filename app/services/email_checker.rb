@@ -7,11 +7,13 @@ class EmailChecker
   end
 
   def execute
-    @import.import_contacts.each do |import_contact|
-      EmailCheck.create(email: import_contact.email)
+    import_emails = @import.import_contacts.pluck(:email).uniq
+    existing_emails = EmailCheck.where(email: import_emails).pluck(:email)
+    new_emails = import_emails - existing_emails
+    new_emails.each do |email|
+      EmailCheck.create(email: email)
     end
-    all_emails = @import.import_contacts.map(&:email)
-    response = @client.fetch(all_emails)
+    response = @client.fetch(new_emails)
     response['email_batch'].each do |email|
       email_check = EmailCheck.find_by(email: email['address'])
       email_check.register_status(email['status'])
