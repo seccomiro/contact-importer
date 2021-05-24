@@ -17,7 +17,7 @@ class ZeroBounceClient
           'ip_address' => nil
         }
       end
-    }
+    }.to_json
     res = http.request(req)
 
     JSON.parse(res.body)
