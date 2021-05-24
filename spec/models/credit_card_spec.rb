@@ -15,7 +15,7 @@ RSpec.describe CreditCard, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to have_one(:contact).dependent(:restrict_with_exception) }
+    it { is_expected.to have_one(:contact) }
   end
 
   describe 'validations' do

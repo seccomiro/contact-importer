@@ -5,5 +5,5 @@ class CreditCard < ApplicationRecord
   validates :number, presence: true
   validates :franchise, presence: true
 
-  has_one :contact, dependent: :restrict_with_exception
+  has_one :contact
 end
