@@ -22,9 +22,15 @@
 
     <tbody>
       <% @contacts.each do |contact| %>
+        <div><%= contact.email %></div>
         <tr>
           <td><%= contact.name %></td>
-          <td><%= contact.email %></td>
+          <td>
+            <div class="badge badge-info">
+            <% status = contact.email_check ? contact.email_check&.status.to_s.humanize : nil %>
+              <%= status || 'Not checked' %>
+            </div>
+          </td>
           <td><%= contact.birthdate %></td>
           <td><%= contact.phone %></td>
           <td><%= contact.address %></td>
