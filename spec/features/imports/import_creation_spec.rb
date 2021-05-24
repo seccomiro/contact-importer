@@ -5,6 +5,9 @@ RSpec.feature 'Import creation', type: :feature do
     let(:user) { create(:user) }
 
     before do
+      allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
+        .with([]).and_return({ 'email_batch' => [] })
+
       sign_in user
     end
 

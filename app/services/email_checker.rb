@@ -7,7 +7,7 @@ class EmailChecker
   end
 
   def execute
-    import_emails = @import.import_contacts.pluck(:email).uniq
+    import_emails = @import.import_contacts.pluck(:email).uniq & @import.user.contacts.pluck(:email)
     existing_emails = EmailCheck.where(email: import_emails).pluck(:email)
     new_emails = import_emails - existing_emails
     new_emails.each do |email|

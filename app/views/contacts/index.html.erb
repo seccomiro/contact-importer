@@ -42,7 +42,7 @@
               <%= contact.email %>
             </div>
             <div class="badge badge-<%= badge %>">
-              <%= status.to_s.humanize || 'Not checked' %>
+              <%= (status || 'Not checked').to_s.humanize %>
             </div>
           </td>
           <td><%= contact.birthdate %></td>

@@ -3,11 +3,8 @@ require 'rails_helper'
 describe EmailChecker do
   let(:valid_email) { 'valid@email.com' }
   let(:another_valid_email) { 'another@email.com' }
-  let(:invalid_email) { 'invalid@email.com' }
   let!(:import) { create(:import) }
-  let!(:import_contact_with_valid_email) { create(:import_contact, email: valid_email, import: import) }
-  let!(:another_import_contact_with_valid_email) { create(:import_contact, email: another_valid_email, import: import) }
-  let(:all_email_check_emails) { EmailCheck.all.map(&:email) }
+  let(:all_email_check_emails) { EmailCheck.all.pluck(:email) }
   let(:first_email_check) { EmailCheck.first }
   let(:client) { instance_double('ZeroBounceClient') }
   let(:zero_bounce_response_for_valid_emails) do
@@ -20,16 +17,15 @@ describe EmailChecker do
   end
   let(:empty_zero_bounce_response) { { 'email_batch' => [] } }
 
-  before do
-    allow(client).to receive(:fetch)
-      .with([valid_email, another_valid_email])
-      .and_return(zero_bounce_response_for_valid_emails)
-  end
-
   describe '#execute' do
     subject(:email_checker) { @email_checker }
 
     before do
+      create(:import_contact, email: valid_email, import: import)
+      create(:import_contact, email: another_valid_email, import: import)
+      create(:contact, user: import.user, email: valid_email)
+      create(:contact, user: import.user, email: another_valid_email)
+
       allow(client).to receive(:fetch)
         .with([valid_email, another_valid_email])
         .and_return(zero_bounce_response_for_valid_emails)
@@ -40,7 +36,7 @@ describe EmailChecker do
 
     context 'with an import with valid emails' do
       it 'returns a list of email checks for all the emails' do
-        expect(all_email_check_emails).to include(valid_email, another_valid_email)
+        expect(all_email_check_emails).to contain_exactly(valid_email, another_valid_email)
       end
 
       # FIX: We cannot test intermediate states right now because we are running synchronously
@@ -63,7 +59,7 @@ describe EmailChecker do
       it 'returns a list of email checks for all the emails' do
         email_checker.execute
 
-        expect(all_email_check_emails).to include(valid_email, another_valid_email)
+        expect(all_email_check_emails).to contain_exactly(valid_email, another_valid_email)
       end
     end
 
@@ -76,6 +72,8 @@ describe EmailChecker do
       before do
         create(:import_contact, email: valid_email, import: another_user_import)
         create(:import_contact, email: another_valid_email, import: another_user_import)
+        create(:contact, email: valid_email, user: another_user)
+        create(:contact, email: another_valid_email, user: another_user)
 
         allow(client).to receive(:fetch)
           .with([])
@@ -90,14 +88,14 @@ describe EmailChecker do
       end
 
       it 'returns a list of email checks for all the emails' do
-        expect(all_email_check_emails).to include(valid_email, another_valid_email)
+        expect(all_email_check_emails).to contain_exactly(valid_email, another_valid_email)
       end
     end
 
     context 'when executing with one new email and one existing email' do
       let(:another_user) { create(:user) }
       let(:another_user_import) { create(:import, user: another_user) }
-      let!(:another_user_email_checker) { described_class.new(another_user_import, client) }
+      let(:another_user_email_checker) { described_class.new(another_user_import, client) }
       let(:one_more_valid_email) { 'one_more@email.com' }
       let(:zero_bounce_response_for_one_more_valid_email) do
         {
@@ -106,11 +104,13 @@ describe EmailChecker do
           ]
         }
       end
-      let(:current_email_checks) { EmailCheck.where(email: [valid_email, one_more_valid_email]).map(&:email) }
+      let(:current_email_checks) { EmailCheck.where(email: [valid_email, one_more_valid_email]).pluck(:email) }
 
       before do
         create(:import_contact, email: valid_email, import: another_user_import)
         create(:import_contact, email: one_more_valid_email, import: another_user_import)
+        create(:contact, email: valid_email, user: another_user)
+        create(:contact, email: one_more_valid_email, user: another_user)
 
         allow(client).to receive(:fetch)
           .with([one_more_valid_email])
@@ -124,7 +124,7 @@ describe EmailChecker do
       it 'returns a list of email checks that contains both emails' do
         another_user_email_checker.execute
 
-        expect(current_email_checks).to include(one_more_valid_email)
+        expect(current_email_checks).to contain_exactly(valid_email, one_more_valid_email)
       end
     end
 
