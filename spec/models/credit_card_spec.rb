@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_relative '../concerns/credit_card_validable_spec'
 
 RSpec.describe CreditCard, type: :model do
   it_behaves_like 'CreditCardValidable'
