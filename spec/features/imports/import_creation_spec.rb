@@ -23,6 +23,14 @@ RSpec.feature 'Import creation', type: :feature do
       expect(page).to have_current_path(import_path(user.imports.last))
     end
 
+    scenario 'User tries to create an import with validation issues' do
+      visit new_import_path
+      click_on 'Create Import'
+
+      expect(page).to have_current_path(imports_path)
+      expect(page).to have_text('Please review the problems below')
+    end
+
     scenario 'User can assign CSV attributes to system attributes' do
       import = create(:import, user: user)
       options = ImportContact.importable_attributes.map(&:to_s)
