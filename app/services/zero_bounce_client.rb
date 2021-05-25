@@ -1,6 +1,8 @@
 class ZeroBounceClient
   def initialize
     @api_key = ENV['ZEROBOUNCE_API_KEY']
+    @whitelist = whitelist
+    @allow_only_whitelisted = ENV['ZEROBOUNCE_ALLOW_ONLY_WHITELISTED'] == 'true'
   end
 
   def fetch(emails)
@@ -21,5 +23,17 @@ class ZeroBounceClient
     res = http.request(req)
 
     JSON.parse(res.body)
+  end
+
+  # private
+
+  # This list is needed to avoid charging the real ZeroBounce account credits
+  def whitelist
+    yaml = YAML.load_file(Rails.root.join('lib/assets/zero_bounce_whitelist.yml'))
+    yaml['whitelist']
+  end
+
+  def whitelisted?(email)
+    @whitelist.include?(email) || !@allow_only_whitelisted
   end
 end
