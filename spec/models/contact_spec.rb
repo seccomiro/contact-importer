@@ -40,9 +40,33 @@ RSpec.describe Contact, type: :model do
     it { is_expected.to validate_uniqueness_of(:email).scoped_to(:user_id) }
   end
 
+  describe 'email validation' do
+    context 'with a valid email' do
+      let(:valid_email) { 'valid@email.com' }
+
+      it 'does not generate a validation error' do
+        contact = build(:contact, email: valid_email)
+        contact.valid?
+
+        expect(contact.errors[:email]).to be_empty
+      end
+    end
+
+    context 'with an invalid email' do
+      let(:invalid_email) { 'email' }
+
+      it 'generates a validation error' do
+        contact = build(:contact, email: invalid_email)
+        contact.valid?
+
+        expect(contact.errors[:email]).to include('is invalid')
+      end
+    end
+  end
+
   describe 'name validation' do
     context 'with a valid name' do
-      it 'does not generate an validation error' do
+      it 'does not generate a validation error' do
         contact = build(:contact)
         contact.valid?
 
@@ -51,7 +75,7 @@ RSpec.describe Contact, type: :model do
     end
 
     context 'with an alternative valid name' do
-      it 'does not generate an validation error' do
+      it 'does not generate a validation error' do
         contact = build(:contact, :alternative_valid_name)
         contact.valid?
 
@@ -60,7 +84,7 @@ RSpec.describe Contact, type: :model do
     end
 
     context 'with an invalid name' do
-      it 'generates an validation error' do
+      it 'generates a validation error' do
         contact = build(:contact, :invalid_name)
         contact.valid?
 
@@ -71,7 +95,7 @@ RSpec.describe Contact, type: :model do
 
   describe 'phone validation' do
     context 'with a valid phone' do
-      it 'does not generate an validation error' do
+      it 'does not generate a validation error' do
         contact = build(:contact)
         contact.valid?
 
@@ -80,7 +104,7 @@ RSpec.describe Contact, type: :model do
     end
 
     context 'with an alternative valid phone' do
-      it 'does not generate an validation error' do
+      it 'does not generate a validation error' do
         contact = build(:contact, :alternative_valid_phone)
         contact.valid?
 
@@ -89,7 +113,7 @@ RSpec.describe Contact, type: :model do
     end
 
     context 'with an invalid phone' do
-      it 'generates an validation error' do
+      it 'generates a validation error' do
         contact = build(:contact, :invalid_phone)
         contact.valid?
 
