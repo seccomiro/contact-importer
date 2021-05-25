@@ -12,7 +12,8 @@ RSpec.describe EmailCheck, type: :model do
       expect(subject).to define_enum_for(:status)
         .with_values({
                        checking: 0, good: 1, bad: 2,
-                       catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7
+                       catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7,
+                       not_whitelisted: 8
                      })
     }
   end
@@ -70,6 +71,7 @@ RSpec.describe EmailCheck, type: :model do
 
         context 'with valid transient statuses as input' do
           it_behaves_like 'registers valid status for valid input', 'checking', :checking
+          it_behaves_like 'registers valid status for valid input', 'not_whitelisted', :not_whitelisted
         end
 
         context 'with an invalid input status' do

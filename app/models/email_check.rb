@@ -4,7 +4,8 @@ class EmailCheck < ApplicationRecord
 
   enum status: {
     checking: 0, good: 1, bad: 2,
-    catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7
+    catch_all: 3, unknown: 4, spamtrap: 5, abuse: 6, do_not_mail: 7,
+    not_whitelisted: 8
   }
 
   before_validation :ensure_status
@@ -30,7 +31,8 @@ class EmailCheck < ApplicationRecord
       'unknown' => :unknown,
       'spamtrap' => :spamtrap,
       'abuse' => :abuse,
-      'do_not_mail' => :do_not_mail
+      'do_not_mail' => :do_not_mail,
+      'not_whitelisted' => :not_whitelisted
     }
   end
 
