@@ -7,6 +7,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'carrierwave', '~> 2.0'
 gem 'devise'
 gem 'down'
+gem 'fog-aws'
 gem 'font-awesome-sass', '~> 5.15.1'
 gem 'pg', '~> 1.1'
 gem 'pry-rails'

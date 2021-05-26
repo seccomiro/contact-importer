@@ -2,13 +2,13 @@ require 'csv'
 require 'down'
 
 class CsvImporter
-  def initialize(import, path = nil)
+  def initialize(import)
     @import = import
-    @tempfile = import.file.path
-
-    # TODO: This is needed in order to simulate public files in production.
-    # @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
-    # @tempfile = Down.download(@url).path
+    @tempfile = if Rails.env.production?
+                  Down.download(@import.file.url).path
+                else
+                  "#{Rails.root}/public#{Import.last.file.url}"
+                end
   end
 
   def fetch_headers
