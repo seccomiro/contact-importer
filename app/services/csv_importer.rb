@@ -2,10 +2,13 @@ require 'csv'
 require 'down'
 
 class CsvImporter
-  def initialize(import)
+  def initialize(import, path = nil)
     @import = import
-    @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
-    @tempfile = Down.download(@url).path
+    @tempfile = import.file.path
+
+    # TODO: This is needed in order to simulate public files in production.
+    # @url = "#{ENV['ROOT_URL']}#{@import.file.url}"
+    # @tempfile = Down.download(@url).path
   end
 
   def fetch_headers
@@ -15,12 +18,6 @@ class CsvImporter
   end
 
   def execute
-    import
-  end
-
-  private
-
-  def import
     CSV.foreach(@tempfile, headers: true, encoding: 'utf-8', col_sep: ';') do |line|
       import_contact = @import.import_contacts.build
       @import.headers.each do |header, db_column|
@@ -37,7 +34,7 @@ class CsvImporter
     contact = @import.user.contacts.create(
       name: import_contact.name,
       email: import_contact.email,
-      birthdate: Date.parse(import_contact.birthdate),
+      birthdate: import_contact.valid_birthdate? ? DateTime.parse(import_contact.birthdate) : nil,
       phone: import_contact.phone,
       address: import_contact.address,
       credit_card_attributes: {
@@ -46,5 +43,6 @@ class CsvImporter
     )
     import_contact.error_message = contact.errors.full_messages.to_json unless contact.valid?
     import_contact.save
+    import_contact
   end
 end

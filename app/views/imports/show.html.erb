@@ -21,7 +21,7 @@
 
 <% if @import.on_hold? %>
   <h2>Headers</h2>
-  <div class="table-responsive">
+  <div class="attributes table-responsive">
     <%= form_with url: assign_import_path(@import), method: :post do |f| %>
       <table class="table table-striped table-bordered table-hover">
         <thead>
@@ -33,14 +33,14 @@
         <tbody>
           <% @import.headers.each do |file_header, db_column| %>
             <tr>
-              <td><%= file_header %></td>
-              <td>
+              <td class="file-header"><%= file_header %></td>
+              <td class="system-attribute">
                 <%= f.collection_select "file_header[#{file_header}]",
                     @importable_attributes,
                     :to_s,
                     :to_s,
                     {include_blank: true, selected: db_column},
-                    {class: 'form-control'} %>
+                    {class: 'form-control', id: "file_header_#{file_header}"} %>
               </td>
             </tr>
           <% end %>
@@ -48,40 +48,44 @@
       </table>
       <div class="form-actions">
         <%= f.submit 'Assign Attributes', class: 'btn btn-primary btn-lg' %>
-        <%= link_to 'Process File', execute_import_path(@import), class: 'btn btn-primary btn-lg' %>
+        <% if @import.headers_filled? %>
+          <%= link_to 'Process File', execute_import_path(@import), class: 'btn btn-primary btn-lg' %>
+        <% end %>
       </div>
     <% end %>
   </div>
 <% end %>
 
 <% if (@import.finished? || @import.failed?) && @import.import_contacts.with_error.any? %>
-  <h2>Failing Contacts</h2>
-  <div class="table-responsive">
-    <table class="table table-striped table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Birthdate</th>
-          <th>Phone</th>
-          <th>Address</th>
-          <th>Credit card</th>
-          <th>Error Messages</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @import.import_contacts.with_error.each do |import_contact| %>
+  <div class="failing-contacts">
+    <h2>Failing Contacts</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
           <tr>
-            <td><%= import_contact.name %></td>
-            <td><%= import_contact.email %></td>
-            <td><%= import_contact.birthdate %></td>
-            <td><%= import_contact.phone %></td>
-            <td><%= import_contact.address %></td>
-            <td><%= import_contact.credit_card_number %></td>
-            <td><%= import_contact.error_message %></td>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Birthdate</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Credit card</th>
+            <th>Error Messages</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @import.import_contacts.with_error.each do |import_contact| %>
+            <tr>
+              <td><%= import_contact.name %></td>
+              <td><%= import_contact.email %></td>
+              <td><%= import_contact.birthdate %></td>
+              <td><%= import_contact.phone %></td>
+              <td><%= import_contact.address %></td>
+              <td><%= import_contact.credit_card_number %></td>
+              <td><%= import_contact.error_message %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 <% end %>

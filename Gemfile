@@ -38,11 +38,13 @@ group :development do
   gem 'rubocop-rspec', require: false
   gem 'spring'
   gem 'web-console', '>= 4.1.0'
+  gem 'webmock'
 end
 
 group :test do
   gem 'capybara', '>= 3.26'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.0'
+  gem 'simplecov', require: false
   gem 'webdrivers'
 end

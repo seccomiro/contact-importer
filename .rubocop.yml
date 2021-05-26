@@ -33,6 +33,8 @@ Style/SymbolArray:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+Metrics/BlockLength:
+  Enabled: false
 Style/EmptyMethod:
   Enabled: false
 Metrics/CyclomaticComplexity:

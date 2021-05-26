@@ -1,10 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe CreditCard, type: :model do
-  let(:number) { '4111111111111111' }
-  let(:credit_card) { create(:credit_card, number: number) }
+  it_behaves_like 'CreditCardValidable'
 
-  it 'has the correct franchise before validation' do
-    expect(credit_card.franchise).to eq(CreditCardValidation.new(number).fetch_issuer_name)
+  describe 'attributes' do
+    it { is_expected.to have_attribute(:number) }
+    it { is_expected.to have_attribute(:franchise) }
+  end
+
+  describe 'columns' do
+    it { is_expected.to have_db_column(:number).of_type(:string) }
+    it { is_expected.to have_db_column(:franchise).of_type(:string) }
+    it { is_expected.to have_db_column(:token).of_type(:string) }
+  end
+
+  describe 'associations' do
+    it { is_expected.to have_one(:contact) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:contact) }
+    it { is_expected.to validate_presence_of(:number) }
+    it { is_expected.to validate_presence_of(:franchise) }
   end
 end

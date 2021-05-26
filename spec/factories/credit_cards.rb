@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :credit_card do
-    number { Faker::Finance.credit_card(:visa) }
+    number { '4111111111111111' }
     contact
   end
 end

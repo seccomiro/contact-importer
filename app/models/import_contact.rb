@@ -7,4 +7,13 @@ class ImportContact < ApplicationRecord
   def self.importable_attributes
     [:name, :email, :birthdate, :phone, :address, :credit_card_number]
   end
+
+  def valid_birthdate?
+    valid_formats = ['%F', '%Y%m%d']
+    valid_formats.any? do |f|
+      DateTime.strptime(birthdate, f)
+    rescue StandardError
+      false
+    end
+  end
 end

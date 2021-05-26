@@ -3,7 +3,7 @@ class ImportsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @imports = Import.all
+    @imports = current_user.imports
   end
 
   def show
@@ -15,8 +15,7 @@ class ImportsController < ApplicationController
   end
 
   def create
-    @import = Import.new(import_params)
-    @import.user = current_user
+    @import = current_user.imports.create(import_params)
 
     if @import.save
       importer = CsvImporter.new(@import)
@@ -47,7 +46,7 @@ class ImportsController < ApplicationController
   private
 
   def set_import
-    @import = Import.find(params[:id])
+    @import = current_user.imports.find(params[:id])
   end
 
   def import_params

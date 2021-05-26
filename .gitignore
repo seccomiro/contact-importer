@@ -40,3 +40,5 @@ yarn-debug.log*
 app/assets/stylesheets/scaffolds.scss
 
 public/uploads/
+
+coverage/
