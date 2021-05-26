@@ -14,7 +14,9 @@
 
 <dl class="dl-horizontal">
   <dt>File:</dt>
-  <dd><%= @import.file %></dd>
+  <dd>
+    <%= link_to @import.file.path.split('/').last, @import.file.url %>
+  </dd>
   <dt>Status:</dt>
   <dd><%= @import.status.to_s.humanize %></dd>
 </dl>
