@@ -8,14 +8,12 @@ describe EmailChecker do
   let(:first_email_check) { EmailCheck.first }
   let(:client) { instance_double('ZeroBounceClient') }
   let(:zero_bounce_response_for_valid_emails) do
-    {
-      'email_batch' => [
-        { 'address' => valid_email, 'status' => 'valid' },
-        { 'address' => another_valid_email, 'status' => 'valid' }
-      ]
-    }
+    [
+      { 'address' => valid_email, 'status' => 'valid' },
+      { 'address' => another_valid_email, 'status' => 'valid' }
+    ]
   end
-  let(:empty_zero_bounce_response) { { 'email_batch' => [] } }
+  let(:empty_zero_bounce_response) { [] }
 
   describe '#execute' do
     subject(:email_checker) { @email_checker }
@@ -98,11 +96,9 @@ describe EmailChecker do
       let(:another_user_email_checker) { described_class.new(another_user_import, client) }
       let(:one_more_valid_email) { 'one_more@email.com' }
       let(:zero_bounce_response_for_one_more_valid_email) do
-        {
-          'email_batch' => [
-            { 'address' => one_more_valid_email, 'status' => 'valid' }
-          ]
-        }
+        [
+          { 'address' => one_more_valid_email, 'status' => 'valid' }
+        ]
       end
       let(:current_email_checks) { EmailCheck.where(email: [valid_email, one_more_valid_email]).pluck(:email) }
 

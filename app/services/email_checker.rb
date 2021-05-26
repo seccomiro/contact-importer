@@ -14,8 +14,12 @@ class EmailChecker
       EmailCheck.create(email: email)
     end
     response = @client.fetch(new_emails)
-    response['email_batch'].each do |email|
+    response.each do |email|
+      # begin
       email_check = EmailCheck.find_by(email: email['address'])
+      # rescue
+      #   byebug
+      # end
       email_check.register_status(email['status'])
       email_check.save
     end
