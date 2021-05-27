@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.feature 'Import visualization', type: :feature do
+  include_context 'stubs for ActiveStorage'
+
   context 'with an authenticated user' do
     let(:user) { create(:user) }
 
@@ -31,7 +33,7 @@ RSpec.feature 'Import visualization', type: :feature do
 
     context 'with only one "on hold" import created' do
       let(:file) { file_fixture('3correct.csv') }
-      let(:import) { create(:import, user: user, file: File.open(file)) }
+      let(:import) { create(:import, user: user, file: fixture_file_upload(file, 'text/plain')) }
 
       scenario 'User sees a link to explore the details of a import' do
         import
@@ -54,7 +56,7 @@ RSpec.feature 'Import visualization', type: :feature do
 
     context 'with only one "finished" import created without errors' do
       let(:file) { file_fixture('3correct.csv') }
-      let(:import) { create(:import, user: user, file: File.open(file)) }
+      let(:import) { create(:import, user: user, file: fixture_file_upload(file, 'text/plain')) }
 
       before do
         CsvImporter.new(import).execute
@@ -71,7 +73,7 @@ RSpec.feature 'Import visualization', type: :feature do
 
     context 'with only one "failed" import created' do
       let(:file) { file_fixture('5error.csv') }
-      let(:import) { create(:import, user: user, file: File.open(file)) }
+      let(:import) { create(:import, user: user, file: fixture_file_upload(file, 'text/plain')) }
 
       before do
         CsvImporter.new(import).execute
@@ -89,7 +91,7 @@ RSpec.feature 'Import visualization', type: :feature do
 
     context 'with only one "finished" import created, but with errors' do
       let(:file) { file_fixture('1correct-3error.csv') }
-      let(:import) { create(:import, user: user, file: File.open(file)) }
+      let(:import) { create(:import, user: user, file: fixture_file_upload(file, 'text/plain')) }
 
       before do
         CsvImporter.new(import).execute

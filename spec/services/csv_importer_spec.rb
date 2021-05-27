@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 describe CsvImporter do
+  include_context 'stubs for ActiveStorage'
+
   describe '#fetch_headers' do
     it 'returns a Hash with the headers of the CSV' do
-      import = create(:import, file: File.open(file_fixture('3correct.csv')))
+      import = create(:import, file: fixture_file_upload('3correct.csv', 'text/plain'))
       csv_importer = described_class.new(import)
 
       expect(csv_importer.fetch_headers).to match(
@@ -20,7 +22,7 @@ describe CsvImporter do
   describe '#execute' do
     context 'with a file with 3 correct contacts' do
       let(:file) { file_fixture('3correct.csv') }
-      let(:import) { create(:import, file: File.open(file)) }
+      let(:import) { create(:import, file: fixture_file_upload(file, 'text/plain')) }
       let(:csv_importer) { described_class.new(import) }
 
       before do
@@ -42,7 +44,7 @@ describe CsvImporter do
 
     context 'with a file with 5 contacts with errors' do
       let(:file) { file_fixture('5error.csv') }
-      let(:import) { create(:import, file: File.open(file)) }
+      let(:import) { create(:import, file: fixture_file_upload(file, 'text/plain')) }
       let(:csv_importer) { described_class.new(import) }
 
       before do
@@ -60,7 +62,7 @@ describe CsvImporter do
 
     context 'with a file with 1 correct contact and 3 contacts with errors' do
       let(:file) { file_fixture('1correct-3error.csv') }
-      let(:import) { create(:import, file: File.open(file)) }
+      let(:import) { create(:import, file: fixture_file_upload(file, 'text/plain')) }
       let(:csv_importer) { described_class.new(import) }
 
       before do
@@ -83,7 +85,7 @@ describe CsvImporter do
 
   describe '#generate_contact' do
     let(:file) { file_fixture('3correct.csv') }
-    let(:import) { create(:import, file: File.open(file)) }
+    let(:import) { create(:import, file: fixture_file_upload(file, 'text/plain')) }
     let(:import_contact) { create(:import_contact, import: import) }
     let(:csv_importer) { described_class.new(import) }
     let(:contact) { csv_importer.generate_contact(import_contact) }

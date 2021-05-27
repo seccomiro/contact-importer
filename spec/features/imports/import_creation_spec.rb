@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.feature 'Import creation', type: :feature do
+  include_context 'stubs for ActiveStorage'
+
   context 'with an authenticated user' do
     let(:user) { create(:user) }
 
@@ -76,7 +78,7 @@ RSpec.feature 'Import creation', type: :feature do
     end
 
     scenario 'User starts processing a file with errors' do
-      import = create(:import, user: user, file: File.open(file_fixture('5error.csv')))
+      import = create(:import, user: user, file: fixture_file_upload('5error.csv', 'text/plain'))
 
       visit import_path(import)
 
