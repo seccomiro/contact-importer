@@ -24,7 +24,7 @@
       <% @imports.each do |import| %>
         <tr>
           <td>
-            <%= link_to import.file.path.split('/').last, import.file.url %>
+            <%= link_to url_for(import.file).split('/').last, url_for(import.file) %>
           </td>
           <td><%= import.status.to_s.humanize %></td>
           <td>

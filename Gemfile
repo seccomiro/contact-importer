@@ -4,7 +4,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.3'
 
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'carrierwave', '~> 2.0'
 gem 'devise'
 gem 'down'
 gem 'fog-aws'
@@ -40,6 +39,10 @@ group :development do
   gem 'spring'
   gem 'web-console', '>= 4.1.0'
   gem 'webmock'
+end
+
+group :production do
+  gem 'aws-sdk-s3', require: false
 end
 
 group :test do

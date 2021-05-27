@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Import, type: :model do
+  include_context 'stubs for ActiveStorage'
+
   describe 'attributes' do
     it { is_expected.to have_attribute(:file) }
     it { is_expected.to have_attribute(:status) }
