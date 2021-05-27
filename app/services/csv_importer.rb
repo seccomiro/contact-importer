@@ -2,13 +2,16 @@ require 'csv'
 require 'down'
 
 class CsvImporter
+  include Rails.application.routes.url_helpers
+
   def initialize(import)
     @import = import
-    @tempfile = if Rails.env.production?
-                  Down.download(@import.file.url).path
-                else
-                  "#{Rails.root}/public#{Import.last.file.url}"
-                end
+    # @tempfile = if Rails.env.production?
+    #               Down.download(url_for(@import.file)).path
+    #             else
+    #               "#{Rails.root}/public#{url_for(Import.last.file)}"
+    #             end
+    @tempfile = Down.download(url_for(@import.file)).path
   end
 
   def fetch_headers
