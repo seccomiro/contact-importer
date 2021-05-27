@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Import visualization', type: :feature do
-  include_context 'stubs for ActiveStorage'
+  include_context 'mocks for ActiveStorage'
 
   context 'with an authenticated user' do
     let(:user) { create(:user) }

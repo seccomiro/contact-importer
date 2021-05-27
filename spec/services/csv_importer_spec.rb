@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe CsvImporter do
-  include_context 'stubs for ActiveStorage'
+  include_context 'mocks for ActiveStorage'
 
   describe '#fetch_headers' do
     it 'returns a Hash with the headers of the CSV' do

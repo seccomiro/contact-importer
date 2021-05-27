@@ -1,4 +1,4 @@
-RSpec.shared_context 'stubs for ActiveStorage' do
+RSpec.shared_context 'mocks for ActiveStorage' do
   before do
     stub_request(:get, /active_storage/)
       .to_return(
