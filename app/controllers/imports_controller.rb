@@ -38,7 +38,7 @@ class ImportsController < ApplicationController
     @import.status = :processing
     @import.save
 
-    CsvProcessWorker.perform_async(@import.id)
+    CsvProcessJob.perform_later(@import)
 
     redirect_to @import
   end
