@@ -58,6 +58,6 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  config.asset_host = ENV['ROOT_URL']
+  # config.asset_host = ENV['ROOT_URL']
   Rails.application.routes.default_url_options[:host] = ENV['ROOT_URL']
 end
