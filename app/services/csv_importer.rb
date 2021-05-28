@@ -6,11 +6,6 @@ class CsvImporter
 
   def initialize(import)
     @import = import
-    # @tempfile = if Rails.env.production?
-    #               Down.download(url_for(@import.file)).path
-    #             else
-    #               "#{Rails.root}/public#{url_for(Import.last.file)}"
-    #             end
     @tempfile = Down.download(url_for(@import.file)).path
   end
 
