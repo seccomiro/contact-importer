@@ -3,35 +3,32 @@ require 'rails_helper'
 RSpec.describe CsvProcessJob, type: :job do
   let(:perform_later) { described_class.perform_later(import) }
   let(:perform_now) { described_class.perform_now(import) }
-  let(:import) { create(:import) }
+  let(:file) { file_fixture('1whitelisted.csv') }
+  let(:import) { create(:import, file: fixture_file_upload(file, 'text/plain')) }
+  let(:whitelisted_valid_email) { 'valid@example.com' }
+  let(:zero_bounce_response_for_whitelisted_valid_email) { [{ 'address' => whitelisted_valid_email, 'status' => 'valid' }] }
 
   include_context 'mocks for ActiveStorage'
 
   before do
-    ActiveJob::Base.queue_adapter = :test
+    allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
+      .with([whitelisted_valid_email])
+      .and_return(zero_bounce_response_for_whitelisted_valid_email)
   end
 
-  describe '.perform_later' do
-    it 'enqueues the job' do
-      expect { perform_later }.to have_enqueued_job
-    end
-  end
-
-  describe '.perform_now' do
+  describe 'when performing' do
     it 'sets the import status to finished' do
-      perform_now
+      perform_later
 
-      expect(import).to be_finished
+      expect(import.reload).to be_finished
     end
 
     it 'imports the contacts' do
-      expect { perform_now }.to change(Contact, :count).by(3)
+      expect { perform_later }.to change(Contact, :count).by(1)
     end
 
-    it 'enqueues a EmailCheckerJob' do
-      perform_now
-
-      expect(EmailCheckerJob).to have_been_enqueued.with(import)
+    it 'enqueues a EmailCheckerJob', test_jobs_queue: true do
+      expect { perform_now }.to have_enqueued_job(EmailCheckerJob).with(import)
     end
   end
 end
