@@ -6,7 +6,6 @@ describe EmailChecker do
   let!(:import) { create(:import) }
   let(:all_email_check_emails) { EmailCheck.all.pluck(:email) }
   let(:first_email_check) { EmailCheck.first }
-  let(:client) { instance_double('ZeroBounceClient') }
   let(:zero_bounce_response_for_valid_emails) do
     [
       { 'address' => valid_email, 'status' => 'valid' },
@@ -24,11 +23,11 @@ describe EmailChecker do
       create(:contact, user: import.user, email: valid_email)
       create(:contact, user: import.user, email: another_valid_email)
 
-      allow(client).to receive(:fetch)
+      allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
         .with([valid_email, another_valid_email])
         .and_return(zero_bounce_response_for_valid_emails)
 
-      @email_checker = described_class.new(import, client)
+      @email_checker = described_class.new(import)
       email_checker.execute
     end
 
@@ -45,7 +44,7 @@ describe EmailChecker do
 
     context 'when executing a second time with the same emails' do
       before do
-        allow(client).to receive(:fetch)
+        allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
           .with([])
           .and_return(empty_zero_bounce_response)
       end
@@ -73,11 +72,11 @@ describe EmailChecker do
         create(:contact, email: valid_email, user: another_user)
         create(:contact, email: another_valid_email, user: another_user)
 
-        allow(client).to receive(:fetch)
+        allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
           .with([])
           .and_return(empty_zero_bounce_response)
 
-        @another_user_email_checker = described_class.new(another_user_import, client)
+        @another_user_email_checker = described_class.new(another_user_import)
         another_user_email_checker.execute
       end
 
@@ -93,7 +92,7 @@ describe EmailChecker do
     context 'when executing with one new email and one existing email' do
       let(:another_user) { create(:user) }
       let(:another_user_import) { create(:import, user: another_user) }
-      let(:another_user_email_checker) { described_class.new(another_user_import, client) }
+      let(:another_user_email_checker) { described_class.new(another_user_import) }
       let(:one_more_valid_email) { 'one_more@email.com' }
       let(:zero_bounce_response_for_one_more_valid_email) do
         [
@@ -108,7 +107,7 @@ describe EmailChecker do
         create(:contact, email: valid_email, user: another_user)
         create(:contact, email: one_more_valid_email, user: another_user)
 
-        allow(client).to receive(:fetch)
+        allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
           .with([one_more_valid_email])
           .and_return(zero_bounce_response_for_one_more_valid_email)
       end
