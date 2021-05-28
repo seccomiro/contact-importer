@@ -1,7 +1,6 @@
 class ZeroBounceClient
   def initialize
     @api_key = ENV['ZEROBOUNCE_API_KEY']
-    @whitelist = ZeroBounceClient.whitelist
     @allow_only_whitelisted = ENV['ZEROBOUNCE_ALLOW_ONLY_WHITELISTED'] == 'true'
   end
 
@@ -33,7 +32,7 @@ class ZeroBounceClient
   end
 
   def whitelisted?(email)
-    @whitelist.include?(email) || !@allow_only_whitelisted
+    whitelist.include?(email) || !@allow_only_whitelisted
   end
 
   private
@@ -44,5 +43,9 @@ class ZeroBounceClient
       .map do |email|
         { 'address' => email, 'status' => 'not_whitelisted' }
       end
+  end
+
+  def whitelist
+    @whitelist ||= ZeroBounceClient.whitelist
   end
 end

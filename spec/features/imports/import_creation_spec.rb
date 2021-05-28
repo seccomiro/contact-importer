@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.feature 'Import creation', type: :feature do
+  let(:whitelisted_valid_email) { 'valid@example.com' }
+  let(:zero_bounce_response_for_whitelisted_valid_email) { [{ 'address' => whitelisted_valid_email, 'status' => 'valid' }] }
+
   include_context 'mocks for ActiveStorage'
 
   context 'with an authenticated user' do
@@ -9,6 +12,9 @@ RSpec.feature 'Import creation', type: :feature do
     before do
       allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
         .with([]).and_return([])
+      allow_any_instance_of(ZeroBounceClient).to receive(:fetch)
+        .with([whitelisted_valid_email])
+        .and_return(zero_bounce_response_for_whitelisted_valid_email)
 
       sign_in user
     end
@@ -53,7 +59,8 @@ RSpec.feature 'Import creation', type: :feature do
     end
 
     scenario 'User assigns attributes and starts processing an import' do
-      import = create(:import, :empty_headers, user: user)
+      file = file_fixture('1whitelisted.csv')
+      import = create(:import, :empty_headers, user: user, file: fixture_file_upload(file, 'text/plain'))
 
       visit import_path(import)
 
@@ -74,7 +81,7 @@ RSpec.feature 'Import creation', type: :feature do
       click_on 'Process File'
 
       expect(page).to have_current_path(import_path(import))
-      expect(page).to have_text('Processing')
+      expect(page).to have_text('Finished')
     end
 
     scenario 'User starts processing a file with errors' do
