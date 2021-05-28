@@ -1,9 +1,9 @@
 class EmailChecker
   attr_writer :client
 
-  def initialize(import, client = nil)
+  def initialize(import)
     @import = import
-    @client = client || ZeroBounceClient.new
+    @client = ZeroBounceClient.new
   end
 
   def execute
@@ -15,11 +15,7 @@ class EmailChecker
     end
     response = @client.fetch(new_emails)
     response.each do |email|
-      # begin
       email_check = EmailCheck.find_by(email: email['address'])
-      # rescue
-      #   byebug
-      # end
       email_check.register_status(email['status'])
       email_check.save
     end
