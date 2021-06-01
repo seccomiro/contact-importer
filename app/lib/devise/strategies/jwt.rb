@@ -5,8 +5,16 @@ module Devise
         request.headers['Authorization'].present?
       end
 
+      def store?
+        false
+      end
+
+      def clean_up_csrf?
+        false
+      end
+
       def authenticate!
-        token = request.headers.fetch('Authorization', '').last
+        token = request.headers.fetch('Authorization', '').split.last
         success! User.from_token(token)
       rescue ::JWT::ExpiredSignature
         fail! 'Auth token has expired'
