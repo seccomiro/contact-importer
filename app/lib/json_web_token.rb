@@ -5,6 +5,6 @@ class JsonWebToken
   end
 
   def self.decode(token)
-    JWT.decode(token, Rails.application.secret_key_base).first
+    JWT.decode(token.to_s, Rails.application.secret_key_base).first
   end
 end
