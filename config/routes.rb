@@ -8,4 +8,10 @@ Rails.application.routes.draw do
   end
   devise_for :users
   root to: 'home#index'
+
+  namespace :api do
+    namespace :v1 do
+      resources :contacts, only: [:index]
+    end
+  end
 end
