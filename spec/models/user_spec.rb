@@ -60,26 +60,20 @@ RSpec.describe User, type: :model do
     end
 
     context 'with an invalid JWT token' do
-      let(:invalid_token) { 'xxx' }
-
       it 'raises JWT::DecodeError' do
-        expect { described_class.from_token(invalid_token) }.to raise_error(JWT::DecodeError)
+        expect { described_class.from_token(invalid_jwt) }.to raise_error(JWT::DecodeError)
       end
     end
 
     context 'with a valid JWT token that is not related to any user' do
-      let(:token_without_user) { 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OTk5LCJleHAiOjE2MjM3ODI2OTR9.O0YBIa-j-RTYMK3b8nV-EZZt7mB-99JTetPywPVObls' }
-
       it 'raises ActiveRecord::RecordNotFound' do
-        expect { described_class.from_token(token_without_user) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { described_class.from_token(jwt_without_user) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     context 'with a valid JWT token that does not have the correct payload' do
-      let(:token_with_invalid_payload) { 'eyJhbGciOiJIUzI1NiJ9.eyJ0ZXN0IjoxMjMsImV4cCI6MTYyMzc4MjQ1NX0.H7ITDHksK1sqyJhfo6PRA5sRE1dNCR1NzRJsp0cxhnk' }
-
       it 'raises Jwt::InvalidPayload' do
-        expect { described_class.from_token(token_with_invalid_payload) }.to raise_error(Jwt::InvalidPayload)
+        expect { described_class.from_token(jwt_with_invalid_payload) }.to raise_error(Jwt::InvalidPayload)
       end
     end
   end
