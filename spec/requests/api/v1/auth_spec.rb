@@ -36,7 +36,7 @@ RSpec.describe 'Api::V1::Auth', type: :request do
       end
 
       context 'without the optional password confirmation' do
-        let(:user_data) { { email: email, password: password } }
+        let(:user_data) { { email: email, password: password, password_confirmation: nil } }
 
         it_behaves_like 'success JSON response'
 
@@ -145,5 +145,107 @@ RSpec.describe 'Api::V1::Auth', type: :request do
     # end
   end
 
-  # TODO: Write Sign in specs
+  describe '/api/v1/sign_in' do
+    context 'with valid user data' do
+      let(:user_data) { { email: email, password: password } }
+
+      context 'with an existing user' do
+        let!(:user) { create(:user, email: email, password: password) }
+
+        before do
+          post api_v1_sign_in_path, headers: headers, params: user_data.to_json
+        end
+
+        it_behaves_like 'success JSON response'
+
+        it 'returns a user object' do
+          expect(json['data']).to include('user')
+        end
+
+        it 'returns a user object with correct structure and data' do
+          expect(json['data']['user']).to include(
+            {
+              'email' => user.email,
+              'token' => user.token
+            }
+          )
+        end
+      end
+
+      context 'with a nonexisting user' do
+        before do
+          post api_v1_sign_in_path, headers: headers, params: user_data.to_json
+        end
+
+        it_behaves_like 'fail JSON response', :unauthorized
+
+        it 'returns the correct error data' do
+          expect(json['data']).to eq('Invalid email or password')
+        end
+      end
+    end
+
+    context 'with a valid email, but invalid password' do
+      let!(:user) { create(:user, email: email, password: password) }
+      let(:user_data) { { email: email, password: "#{password}-" } }
+
+      before do
+        post api_v1_sign_in_path, headers: headers, params: user_data.to_json
+      end
+
+      it_behaves_like 'fail JSON response', :unauthorized
+
+      it 'returns the correct error data' do
+        expect(json['data']).to eq('Invalid email or password')
+      end
+    end
+
+    # TODO: Test an existing, though invalid, JSON resquest body (see FIXME above).
+
+    context 'with invalid user data' do
+      before do
+        post api_v1_sign_in_path, headers: headers, params: user_data.to_json
+      end
+
+      context 'without a valid email, but invalid password' do
+        let(:user_data) { { email: email, password: "#{password}-" } }
+
+        it_behaves_like 'fail JSON response', :unauthorized
+
+        it 'returns the correct error data' do
+          expect(json['data']).to eq('Invalid email or password')
+        end
+      end
+
+      context 'without a password' do
+        let(:user_data) { { email: email } }
+
+        it_behaves_like 'fail JSON response', :unauthorized
+
+        it 'returns the correct error data' do
+          expect(json['data']).to eq('Invalid email or password')
+        end
+      end
+
+      context 'without an email' do
+        let(:user_data) { { password: password } }
+
+        it_behaves_like 'fail JSON response', :unauthorized
+
+        it 'returns the correct error data' do
+          expect(json['data']).to eq('Invalid email or password')
+        end
+      end
+
+      context 'without any data' do
+        let(:user_data) { nil }
+
+        it_behaves_like 'fail JSON response', :unauthorized
+
+        it 'returns the correct error data' do
+          expect(json['data']).to eq('Invalid email or password')
+        end
+      end
+    end
+  end
 end
