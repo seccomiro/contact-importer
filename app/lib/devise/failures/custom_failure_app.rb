@@ -2,6 +2,8 @@ module Devise
   module Failures
     class CustomFailureApp < Devise::FailureApp
       def respond
+        # TODO: Possibly, this condition has the ability to mess with an eventual non-API JSON response.
+        # TODO: It needs further verification.
         if request.format == :json
           json_error_response
         else
