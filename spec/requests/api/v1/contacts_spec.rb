@@ -18,17 +18,9 @@ RSpec.describe 'Api::V1::Contacts', type: :request do
         get api_v1_contacts_path, headers: auth_headers
       end
 
-      it 'returns http success' do
-        expect(response).to have_http_status(:success)
-      end
+      it_behaves_like 'success JSON response'
 
-      it 'returns JSON' do
-        expect(response.content_type).to include('application/json')
-      end
-
-      it 'returns a valid JSend response' do
-        expect(json).to include('status', 'data')
-        expect(json['status']).to eq('success')
+      it 'returns a valid list of contacts' do
         expect(json['data']).to include('contacts')
       end
 
@@ -36,7 +28,7 @@ RSpec.describe 'Api::V1::Contacts', type: :request do
         expect(json['data']['contacts'].size).to eq(user.contacts.count)
       end
 
-      it 'returns contacts whith the correct structure and data' do
+      it 'returns contacts with the correct structure and data' do
         json_contact = json['data']['contacts'].first
         expect(json_contact).to include(
           {
