@@ -26,5 +26,18 @@ FactoryBot.define do
         }
       end
     end
+
+    trait :all_header_values_invalid do
+      headers do
+        {
+          'name' => 'xxx',
+          'email' => 'xxx',
+          'birthdate' => 'xxx',
+          'phone' => 'xxx',
+          'address' => 'xxx',
+          'credit_card' => 'xxx'
+        }
+      end
+    end
   end
 end

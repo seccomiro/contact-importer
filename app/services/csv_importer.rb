@@ -6,7 +6,7 @@ class CsvImporter
 
   def initialize(import)
     @import = import
-    @tempfile = Down.download(url_for(@import.file)).path
+    @tempfile = Down.download(polymorphic_url(@import.file)).path
   end
 
   def fetch_headers

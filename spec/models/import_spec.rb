@@ -67,41 +67,54 @@ RSpec.describe Import, type: :model do
     end
   end
 
-  describe '#headers_filled?' do
-    let(:import) { create(:import, headers: nil) }
+  describe '#headers_valid?' do
+    context 'with valid headers' do
+      it 'returns true' do
+        import = build(:import)
+
+        expect(import.headers_valid?).to eq(true)
+      end
+    end
 
     context 'with nil headers' do
       it 'returns false' do
-        expect(import.headers_filled?).to be(false)
+        import = build(:import, headers: nil)
+
+        expect(import.headers_valid?).to be(false)
       end
     end
 
-    context 'with headers loaded but not filled yet' do
+    context 'with header values not yet defined' do
       it 'returns false' do
-        import.headers = CsvImporter.new(import).fetch_headers
+        import = build(:import, :empty_headers)
 
-        expect(import.headers_filled?).to be(false)
+        expect(import.headers_valid?).to eq(false)
       end
     end
 
-    context 'with headers filled' do
-      it 'returns true' do
-        import.headers = CsvImporter.new(import).fetch_headers
-        import.headers.each do |k, _|
-          import.headers[k] = k
-        end
-
-        expect(import.headers_filled?).to be(true)
-      end
-    end
-
-    context 'with all headers filled, except one' do
+    context 'with one invalid header value' do
       it 'returns false' do
-        import.headers = CsvImporter.new(import).fetch_headers
-        import.headers.each { |k, _| import.headers[k] = k }
-        import.headers['name'] = ''
+        import = build(:import)
+        import.headers['name'] = 'invalid_name'
 
-        expect(import.headers_filled?).to be(false)
+        expect(import.headers_valid?).to eq(false)
+      end
+    end
+
+    context 'with one header missing' do
+      it 'returns false' do
+        import = build(:import)
+        import.headers.delete('name')
+
+        expect(import.headers_valid?).to eq(false)
+      end
+    end
+
+    context 'with all header values invalid' do
+      it 'returns false' do
+        import = build(:import, :all_header_values_invalid)
+
+        expect(import.headers_valid?).to eq(false)
       end
     end
   end
