@@ -9,6 +9,7 @@ class Import < ApplicationRecord
   default_scope -> { order(:created_at) }
 
   before_validation :ensure_status
+  after_save :ensure_headers
 
   def headers_filled?
     headers&.all? { |_, v| v.present? } || false
@@ -18,5 +19,13 @@ class Import < ApplicationRecord
 
   def ensure_status
     self.status = :on_hold unless status
+  end
+
+  def ensure_headers
+    return if headers
+
+    importer = CsvImporter.new(self)
+    self.headers = importer.fetch_headers
+    save
   end
 end

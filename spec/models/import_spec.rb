@@ -59,6 +59,14 @@ RSpec.describe Import, type: :model do
     end
   end
 
+  describe 'after_save' do
+    let(:import) { create(:import) }
+
+    it 'has headers' do
+      expect(import.headers).not_to be_nil
+    end
+  end
+
   describe '#headers_filled?' do
     let(:import) { create(:import, headers: nil) }
 
