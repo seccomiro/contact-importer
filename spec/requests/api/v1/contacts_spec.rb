@@ -20,7 +20,7 @@ RSpec.describe 'Api::V1::Contacts', type: :request do
 
       it_behaves_like 'success JSON response'
 
-      it 'returns a valid list of contacts' do
+      it 'returns a list of contacts' do
         expect(json['data']).to include('contacts')
       end
 

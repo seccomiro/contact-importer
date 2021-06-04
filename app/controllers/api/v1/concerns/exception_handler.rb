@@ -3,7 +3,7 @@ module Api::V1::Concerns::ExceptionHandler
 
   included do
     rescue_from ActiveRecord::RecordNotFound do |e|
-      json_fail_response(error_data(e), :not_found)
+      json_fail_response('Record not found', :not_found)
     end
 
     rescue_from ActiveRecord::RecordInvalid do |e|
