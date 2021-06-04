@@ -51,7 +51,7 @@
     </div>
     <div class="form-actions">
       <%= f.submit 'Assign Attributes', class: 'btn btn-primary btn-lg' %>
-      <% if @import.headers_filled? %>
+      <% if @import.headers_valid? %>
         <%= link_to 'Process File', execute_import_path(@import), class: 'btn btn-primary btn-lg' %>
       <% end %>
     </div>

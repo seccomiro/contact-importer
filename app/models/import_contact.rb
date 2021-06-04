@@ -16,4 +16,10 @@ class ImportContact < ApplicationRecord
       false
     end
   end
+
+  def error_hash
+    JSON.parse(error_message)
+  rescue JSON::ParserError
+    []
+  end
 end

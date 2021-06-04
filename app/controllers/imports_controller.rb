@@ -16,12 +16,7 @@ class ImportsController < ApplicationController
 
   def create
     @import = current_user.imports.create(import_params)
-
-    if @import.save
-      importer = CsvImporter.new(@import)
-      @import.headers = importer.fetch_headers
-      @import.save
-
+    if @import.valid?
       redirect_to @import, notice: 'Import was successfully created.'
     else
       render :new
