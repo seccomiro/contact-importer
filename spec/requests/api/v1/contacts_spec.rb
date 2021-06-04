@@ -50,26 +50,10 @@ RSpec.describe 'Api::V1::Contacts', type: :request do
   context 'with a guest' do
     let(:guest_headers) { { 'Accept' => 'application/json' } }
 
-    shared_examples_for 'a user that is not authenticated' do
-      it 'returns an error' do
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns JSON' do
-        expect(response.content_type).to include('application/json')
-      end
-
-      it 'returns a valid JSON authentication error response' do
-        expect(json).to include('status', 'message')
-        expect(json['status']).to eq('error')
-        expect(json['message']).to eq('You need to sign in or sign up before continuing')
-      end
-    end
-
     describe 'GET /api/v1/contacts' do
       before { get api_v1_contacts_path, headers: guest_headers }
 
-      it_behaves_like 'a user that is not authenticated'
+      include_examples 'for a user that is not authenticated'
     end
   end
 end
